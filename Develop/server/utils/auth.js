@@ -6,30 +6,26 @@ const expiration = '2h';
 
 module.exports = {
   // function for our authenticated routes
-  authMiddleware: function (req, res, next) {
-    // allows token to be sent via  req.query or headers
-    let token = req.query.token || req.headers.authorization;
+  authMiddleware: object => {
+    // this allows tokens to be sent through the request body, the request query or the request headers
+    let token = object.req.body.token || object.req.query.token || object.req.headers.authorization;
 
-    // ["Bearer", "<tokenvalue>"]
-    if (req.headers.authorization) {
-      token = token.split(' ').pop().trim();
-    }
+    // if authorization exists, reassign token value, get the token out of ["Bearer", token]
+    if (object.req.headers.authorization) token = token.split(' ').pop().trim()
 
-    if (!token) {
-      return res.status(400).json({ message: 'You have no token!' });
-    }
+    // if token doesn't exist at all, return the request object and authentication will fail (not take place)
+    if (token == null) return object.req
 
     // verify token and get user data out of it
     try {
       const { data } = jwt.verify(token, secret, { maxAge: expiration });
-      req.user = data;
+      object.req.user = data;
     } catch {
       console.log('Invalid token');
-      return res.status(400).json({ message: 'invalid token!' });
     }
 
-    // send to next endpoint
-    next();
+    // after authentication takes place, return request object
+    return object.req
   },
   signToken: function ({ username, email, _id }) {
     const payload = { username, email, _id };
