@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
 
-import { createUser } from '../utils/API';
 import Auth from '../utils/auth';
+
+// import useMutation hook
+import { useMutation } from '@apollo/client'
+// import ADD_USER mutation
+import { ADD_USER } from '../graphql/mutations'
 
 const SignupForm = () => {
   // set initial form state
@@ -17,6 +21,9 @@ const SignupForm = () => {
     setUserFormData({ ...userFormData, [name]: value });
   };
 
+  // get addUser function from ADD_USER graphql mutation
+  const [addUser] = useMutation(ADD_USER)
+
   const handleFormSubmit = async (event) => {
     event.preventDefault();
 
@@ -28,15 +35,9 @@ const SignupForm = () => {
     }
 
     try {
-      const response = await createUser(userFormData);
+      const { data } = await addUser({ variables: {...userFormData} })
 
-      if (!response.ok) {
-        throw new Error('something went wrong!');
-      }
-
-      const { token, user } = await response.json();
-      console.log(user);
-      Auth.login(token);
+      Auth.login(data.addUser.token)
     } catch (err) {
       console.error(err);
       setShowAlert(true);
@@ -100,7 +101,7 @@ const SignupForm = () => {
           disabled={!(userFormData.username && userFormData.email && userFormData.password)}
           type='submit'
           variant='success'>
-          Submit
+          Sign In
         </Button>
       </Form>
     </>
