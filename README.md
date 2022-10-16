@@ -1,7 +1,5 @@
 # Book-Search-Website-Ishan-Wijesingha
 
-
-
 ## Description
 This application is used to search for books from the Google Books API. When the application is first loaded, a search bar is shown that can be used to search books by their name. A list of results will appear when a search is made.
 
