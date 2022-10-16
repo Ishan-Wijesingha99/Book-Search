@@ -16,11 +16,13 @@ module.exports = {
     // if token doesn't exist at all, return the request object and authentication will fail (not take place)
     if (token == null) return object.req
 
-    // verify token and get user data out of it
     try {
+      // verify token and get user data out of it
       const { data } = jwt.verify(token, secret, { maxAge: expiration });
+      // add user property to request object
       object.req.user = data;
     } catch {
+      // if error in the asynchronous task, log this to the console
       console.log('Invalid token');
     }
 

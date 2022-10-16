@@ -12,6 +12,7 @@ import { REMOVE_BOOK } from '../graphql/mutations'
 import { GET_ME } from '../graphql/queries'
 
 
+
 const SavedBooks = () => {
   // destructure data and loading boolean from GET_ME graphql query
   const { data, loading } = useQuery(GET_ME)
@@ -32,13 +33,17 @@ const SavedBooks = () => {
 
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
   const handleDeleteBook = async (bookId) => {
+    // get token
     const token = Auth.loggedIn() ? Auth.getToken() : null;
 
+    // if token does not exist, return false
     if (!token) return false
 
     try {
+      // deconstruct data from removeBook() function returned value
       const { data } = await removeBook({ variables: { bookId } })
 
+      // if data does not exist, throw an error
       if (data == null) throw new Error('something went wrong!')
 
       // upon success, remove book's id from localStorage

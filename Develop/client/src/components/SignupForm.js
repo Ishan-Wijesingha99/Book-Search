@@ -35,7 +35,11 @@ const SignupForm = () => {
     }
 
     try {
+      // deconstruct data from addUser function returned value
       const { data } = await addUser({ variables: {...userFormData} })
+
+      // if data does not exist, throw an error
+      if(data == null) throw new Error('Something went wrong!')
 
       Auth.login(data.addUser.token)
     } catch (err) {
@@ -101,7 +105,7 @@ const SignupForm = () => {
           disabled={!(userFormData.username && userFormData.email && userFormData.password)}
           type='submit'
           variant='success'>
-          Sign In
+          Sign Up
         </Button>
       </Form>
     </>

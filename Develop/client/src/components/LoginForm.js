@@ -35,8 +35,10 @@ const LoginForm = () => {
     }
 
     try {
+      // deconstruct data from loginUser function returned value
       const { data } = await loginUser({ variables: {...userFormData} })
 
+      // if data does not exist, throw an error
       if(data == null) throw new Error('Something went wrong!')
 
       Auth.login(data.login.token)
