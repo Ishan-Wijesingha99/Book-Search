@@ -19,4 +19,3 @@ You can also log out once you are logged in.
 ![screenshot-7](./images/screenshot-7.png)
 
 ## Link to Deployed Application
-Link to deployed app
